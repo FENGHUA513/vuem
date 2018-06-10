@@ -16,6 +16,10 @@ export default {
     HelloWorld
   },
   mounted () {
+    this.$toast('toast')
+    this.$request({
+      url: '/list'
+    })
     axios.post('/api/list').then((res) => {
       console.log(res.data, 'res====')
       this.list = res.data.list
@@ -27,15 +31,6 @@ export default {
 }
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: block;
-  margin: 30px 10px;
-}
+<style scoped lang="less">
 
 </style>
