@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import toast from './plugins/toast'
 import request from './plugins/request'
 import cookie from './plugins/vue-cookie'
@@ -15,6 +16,7 @@ Vue.use(cookie)
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
