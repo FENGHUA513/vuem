@@ -11,8 +11,9 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
   </body>
-  <style>
-    	
-    </style>
+  	<% if(htmlWebpackPlugin.options.env !== 'production') { %>
+      <script src="//mbkst.mobike.com/vconsole_2.5.2.js"></script>
+      <script>console.log(window.location.href)</script>
+    <% } %>
   </style>
 </html>
