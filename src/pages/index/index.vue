@@ -17,6 +17,7 @@ export default {
   },
   mounted () {
     this.$toast('toast')
+    this.$cookie.set('mobile', 11111111)
     this.$request({
       url: '/list'
     })
