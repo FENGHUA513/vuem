@@ -19,15 +19,18 @@ export default {
     this.$toast('toast')
     this.$cookie.set('mobile', 11111111)
     this.$request({
-      url: '/list'
-    })
-    axios.post('/api/list').then((res) => {
-      console.log(res.data, 'res====')
-      this.list = res.data.list
-    })
-    axios.get('/api/user').then((res) => {
+      url: '/api/list'
+    }).then((res) => {
       console.log(res, 'res')
+      this.list = res.list
     })
+    // axios.post('/api/list').then((res) => {
+    //   console.log(res, 'res====')
+    //   this.list = res.data.list
+    // })
+    // axios.get('/api/user').then((res) => {
+    //   console.log(res, 'res')
+    // })
   }
 }
 </script>

@@ -11,7 +11,7 @@ const config = {
 }
 
 function fixURL (url) {
-  let baseUrl = 'api'
+  let baseUrl = ''
   return baseUrl + url
 }
 
