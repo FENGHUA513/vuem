@@ -6,7 +6,7 @@
 import axios from 'axios'
 import HelloWorld from '@/components/HelloWorld'
 export default {
-  name: 'index',
+  name: 'home',
   data () {
     return {
       list: []
