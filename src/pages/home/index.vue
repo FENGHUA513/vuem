@@ -15,6 +15,9 @@ export default {
   components: {
     HelloWorld
   },
+  beforeCreate () {
+    console.log('beforeCreate')
+  },
   mounted () {
     this.$toast('toast')
     this.$cookie.set('mobile', 11111111)
@@ -31,6 +34,13 @@ export default {
     // axios.get('/api/user').then((res) => {
     //   console.log(res, 'res')
     // })
+    console.log('mounted')
+  },
+  created () {
+    console.log('created')
+  },
+  beforeMount () {
+    console.log('beforeMount')
   }
 }
 </script>
