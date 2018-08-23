@@ -17,7 +17,7 @@ var server = ws.createServer(function(conn) {
             if (users[username]) {
                 // 告诉客户端，当前用户名已存在
                 return conn.json({
-                    protocal: 'signup',
+                    protocal: 'register',
                     language: 'zh',
                     code: '1001',
                     message: '用户名已存在'

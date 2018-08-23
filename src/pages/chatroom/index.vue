@@ -6,7 +6,11 @@
     <ul class="members">
       <li v-for="item in list"> <span class="nickname">{{item.nickname}} :</span><span class="message">{{item.message}}</span></li>
     </ul>
-    <Register @registSuccess="registSuccess" v-if="registerPop"></Register>
+    <footer>
+      <input placeholder="请输入" type="" name="">
+      <button>发送</button>
+    </footer>
+    <Register @registSuccess="registSuccess" v-if="registerPop" :ws="ws"></Register>
   </div>
 </template>
 
@@ -17,13 +21,15 @@ export default {
   data () {
     return {
       list: [],
-      registerPop: false
+      registerPop: false,
+      ws: ''
     }
   },
   components: {
     Register
   },
-  beforeCreate () {
+  created () {
+    this.wsconnect() // 链接服务
   },
   methods: {
     goRegist () {
@@ -32,6 +38,15 @@ export default {
     registSuccess (res) {
       this.list.push({nickname: res.nickname})
       this.registerPop = false
+    },
+    wsconnect () {
+      this.ws = new WebSocket('ws://localhost:8081');
+      this.ws.onopen = function() {
+        console.log('链接服务器成功')
+      }
+      this.ws.onerror = function() {
+        that.$toast('链接服务器失败')
+      }
     }
   }
 }
@@ -69,6 +84,25 @@ header {
     .message {
       float: right;
     }
+  }
+}
+footer {
+  position: fixed;
+  bottom: 50px;
+  width: 100%;
+  // height: 100px;
+  background-color: gray;
+  padding: 30px 0;
+  input {
+    border: 1px solid red;
+    margin-left: 30px;
+    width: 500px;
+    height: 80px;
+  }
+  button {
+    background-color: blue;
+    color: #fff;
+    margin-left: 40px;
   }
 }
 </style>

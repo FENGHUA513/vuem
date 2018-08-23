@@ -12,11 +12,11 @@ export default {
   name: 'chatroom',
   data () {
     return {
-      ws: '',
       users: [], //用户列表
       nickname: ''
     }
   },
+  props: ['ws'],
   components: {
     
   },
@@ -25,15 +25,9 @@ export default {
   },
   mounted () {
     let that = this
-    this.ws = new WebSocket('ws://localhost:8081');
-    this.ws.onopen = function() {
-      console.log('链接服务器成功')
-    }
-    this.ws.onerror = function() {
-      that.$toast('链接服务器失败')
-    }
     this.ws.onmessage = function(res) {
         let data = JSON.parse(res.data)
+        console.log(data, 'data')
         if (data.code === '1001') {
           that.$toast('该用户已存在')
         } else {
