@@ -11,10 +11,12 @@
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
-    "build": "node build/build.js"
+    "build": "node build/build.js",
+    "websocket": "node build/websocket-server.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "nodejs-websocket": "^1.7.1",
     "qs": "^6.5.2",
     "tiny-cookie": "^2.1.2",
     "vue": "^2.5.2",
