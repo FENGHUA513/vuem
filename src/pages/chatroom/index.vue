@@ -1,16 +1,16 @@
 <template>
   <div class="wrap">
     <header>
-      <button @click="goRegist">请先注册</button>
+      <button @click="goRegist">请先注册</button><span>{{myName}}</span>
     </header>
     <ul class="members">
-      <li v-for="item in list"> <span class="nickname">{{item.nickname}} :</span><span class="message">{{item.message}}</span></li>
+      <li v-for="item in list"><span class="message">{{item.message}}</span><span class="nickname"> :{{item.nickname}}</span></li>
     </ul>
     <footer>
-      <input placeholder="请输入" type="" name="">
-      <button>发送</button>
+      <input placeholder="请输入" type="" name="" v-model="message">
+      <button @click="sendMessage">发送</button>
     </footer>
-    <Register @registSuccess="registSuccess" v-if="registerPop" :ws="ws"></Register>
+    <Register v-if="registerPop" :ws="ws"></Register>
   </div>
 </template>
 
@@ -22,14 +22,34 @@ export default {
     return {
       list: [],
       registerPop: false,
-      ws: ''
+      ws: '',
+      message: '',
+      myName: ''
     }
   },
   components: {
     Register
   },
   created () {
+    let that = this
     this.wsconnect() // 链接服务
+    this.ws.onmessage = function(res) {
+      let data = JSON.parse(res.data)
+      console.log(data, 'data')
+      if (data.protocal === 'broadcast') {
+        that.list.push({nickname: that.myName, message: that.message})
+      } else if (data.protocal === 'register') {
+        if (data.code === '1001') {
+          that.$toast('该用户已存在')
+        } else {
+          that.$toast('恭喜注册成功')
+          that.registerPop = false
+          that.myName = data.nickname
+        }
+      } else if (data.protocal === 'p2p') {
+        // 点对点的
+      }
+    }
   },
   methods: {
     goRegist () {
@@ -46,6 +66,24 @@ export default {
       }
       this.ws.onerror = function() {
         that.$toast('链接服务器失败')
+      }
+    },
+    sendMessage () {
+      let that = this
+      let jsonObj = {
+        message: that.message,
+        protocal: 'broadcast',
+        language: 'zh'
+      }
+      that.ws.json = function(jsonObj) {
+        let jsonStr = JSON.stringify(jsonObj)
+        that.ws.send(jsonStr)
+      } 
+      console.log(this.ws)
+      if (that.ws && that.ws.readyState === 1) {
+         that.ws.json(jsonObj)
+      } else {
+        that.$toast('与服务器链接中断') 
       }
     }
   }
@@ -72,17 +110,25 @@ header {
     width: 200px;
     padding: 10px;
   }
+  span {
+    float: right;
+    margin-right: 20px;
+  }
 }
 .members {
   margin-top: 10px;
   li {
     line-height: 60px;
     padding: 0 20px;
+    // float: right;
+    p {
+      float: right;
+    }
     .nickname {
-
+      color: green;
     }
     .message {
-      float: right;
+      font-size: 30px;
     }
   }
 }

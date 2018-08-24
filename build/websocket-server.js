@@ -38,13 +38,11 @@ var server = ws.createServer(function(conn) {
             break
           case 'broadcast':
             // 做广播消息处理
-            for (var user in users) {
-                users[user].json({
-                    protocal: 'broadcast',
-                    language: data.language,
-                    message: data.from + '：' + data.message
-                })
-            }
+              conn.json({
+                  protocal: 'broadcast',
+                  language: data.language,
+                  message: data.message
+              })
             break
           case 'p2p':
             // 做点对点消息处理

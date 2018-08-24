@@ -24,33 +24,18 @@ export default {
     console.log('beforeCreate')
   },
   mounted () {
-    let that = this
-    this.ws.onmessage = function(res) {
-        let data = JSON.parse(res.data)
-        console.log(data, 'data')
-        if (data.code === '1001') {
-          that.$toast('该用户已存在')
-        } else {
-          that.$toast('恭喜注册成功')
-          that.$emit('registSuccess', data)
-        }
-    }
   },
   methods: {
     confirmBtn () {
-      let that = this
       let jsonObj = {
         nickname: this.nickname,
         protocal: 'register',
         language: 'zh'
       }
-      this.ws.json = function(jsonObj) {
-        let jsonStr = JSON.stringify(jsonObj)
-        that.ws.send(jsonStr)
-      } 
       console.log(this.ws)
       if (this.ws && this.ws.readyState === 1) {
-         this.ws.json(jsonObj)
+         let jsonStr = JSON.stringify(jsonObj)
+         this.ws.send(jsonStr)
       } else {
         this.$toast('与服务器链接中断') 
       }
