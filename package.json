@@ -12,16 +12,24 @@
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit test/e2e/specs",
     "build": "node build/build.js",
-    "websocket": "node build/websocket-server.js"
+    "websocket": "node build/websocket-server.js",
+    "server": "node server/bin/www"
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "mongoose": "^5.2.9",
     "nodejs-websocket": "^1.7.1",
     "qs": "^6.5.2",
     "tiny-cookie": "^2.1.2",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "http-errors": "~1.6.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.9.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

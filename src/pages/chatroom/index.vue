@@ -32,6 +32,7 @@ export default {
   },
   created () {
     let that = this
+    global.a = '111111'
     this.wsconnect() // 链接服务
     this.ws.onmessage = function(res) {
       let data = JSON.parse(res.data)

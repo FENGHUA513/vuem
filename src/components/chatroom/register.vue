@@ -21,7 +21,7 @@ export default {
     
   },
   beforeCreate () {
-    console.log('beforeCreate')
+    console.log('beforeCreate', global === window)
   },
   mounted () {
   },

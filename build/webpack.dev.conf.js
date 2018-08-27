@@ -44,20 +44,20 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     watchOptions: {
       poll: config.dev.poll,
     },
-    before(app) {
-      const mockPath = path.join(__dirname, '../mock')
-      const routesObj = require('../mock/proxy.js')
-      const routesArray = Object.keys(routesObj)
-      routesArray.forEach((item) => {
-        let data = fs.readFileSync(mockPath + routesObj[item], "utf-8")
-        app.get(item, function(req, res) {
-          res.json(JSON.parse(data))
-        })
-        app.post(item, function(req, res) {
-          res.json(JSON.parse(data))
-        })
-      })
-    }
+    // before(app) {
+    //   const mockPath = path.join(__dirname, '../mock')
+    //   const routesObj = require('../mock/proxy.js')
+    //   const routesArray = Object.keys(routesObj)
+    //   routesArray.forEach((item) => {
+    //     let data = fs.readFileSync(mockPath + routesObj[item], "utf-8")
+    //     app.get(item, function(req, res) {
+    //       res.json(JSON.parse(data))
+    //     })
+    //     app.post(item, function(req, res) {
+    //       res.json(JSON.parse(data))
+    //     })
+    //   })
+    // }
   },
   plugins: [
     new webpack.DefinePlugin({
