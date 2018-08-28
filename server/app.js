@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose')
+var cors = require('express-cors')
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var list = require('./routes/list');
@@ -39,7 +41,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+ 
+app.use(cors({
+    allowedOrigins: [
+        'http://172.17.5.165:8080'
+    ]
+}))
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api', list)

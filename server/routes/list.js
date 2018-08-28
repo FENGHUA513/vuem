@@ -12,7 +12,7 @@ router.get('/list', function(req, res, next) {
 			})
 		} else {
 			console.log('ffff')
-			res.json(doc)
+			res.json(doc[0])
 		}
 	})
 

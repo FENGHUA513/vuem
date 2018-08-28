@@ -21,7 +21,7 @@ export default {
     console.log('beforeCreate')
   },
   mounted () {
-    this.$toast('toast')
+    // this.$toast('toast')
     this.$cookie.set('mobile', 11111111)
     // this.$request({
     //   url: '/api/list'
@@ -41,9 +41,7 @@ export default {
   methods: {
     async getlist () {
       let result = await a()
-      if (result.data.status === '0') {
-        this.list = result.data.list
-      }
+      this.$toast(result.code)
       console.log(result, 'result')
     } 
   }
