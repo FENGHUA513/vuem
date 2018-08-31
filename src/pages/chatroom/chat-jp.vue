@@ -8,7 +8,7 @@
       <button @click="sendMessage">发送</button>
     </div>
     <ul class="content">
-      <li v-for="item in list" v-if="item.language =='zh' " class='own'><span class="own">{{item.message}}</span><img :src="item.image" alt=""></li>
+      <li v-for="item in list" v-if="item.language =='jp' " class='own'><span class="own">{{item.message}}</span><img :src="item.image" alt=""></li>
       <li v-else class='any'><img :src="item.image" alt=""><span class="any">{{item.message}}</span></li>
     </ul>
     <Register v-if="registerPop" :ws="ws"></Register>
@@ -58,7 +58,7 @@ export default {
             }
             break;
           case 'broadcast':
-            if (data.language == 'zh') {
+            if (data.language == 'jp') {
               that.flag = true
               that.list.push({message: data.message, image: data.image, language: data.language})
             } else {
@@ -113,8 +113,8 @@ export default {
         if (matches) {
           that.ws.json({
             protocal: 'p2p',
-            language: 'zh',
-            image: require('assets/111.jpg'),
+            language: 'jp',
+            image: require('assets/444.jpg'),
             from: that.nickname,
             to: matches[1],
             message: matches[2]
@@ -122,9 +122,9 @@ export default {
         } else {
           that.ws.json({
             protocal: 'broadcast',
-            language: 'zh',
+            language: 'jp',
             from: that.nickname,
-            image: require('assets/111.jpg'),
+            image: require('assets/444.jpg'),
             message: that.message
           })
         }
@@ -142,7 +142,7 @@ export default {
         data: {
           q: data.message, //encodeURI(contents.trim()),
           from: data.language,
-          to: "zh",
+          to: "jp",
           appid: 20180817000195588,
           salt: 12345678,
           sign: md

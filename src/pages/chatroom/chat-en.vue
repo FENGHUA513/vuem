@@ -8,8 +8,8 @@
       <button @click="sendMessage">发送</button>
     </div>
     <ul class="content">
-      <li v-if="flag" v-for="item in list" :class="{own:flag, any:!flag}"><span :class="{own:flag, any:!flag}">{{item.message}}</span><img :src="item.image" alt=""></li>
-      <li v-if="!flag" v-for="item in list" :class="{own:flag, any:!flag}"><img :src="item.image" alt=""><span :class="{own:flag, any:!flag}">{{item.message}}</span></li>
+      <li v-for="item in list" v-if="item.language =='en' " class='own'><span class="own">{{item.message}}</span><img :src="item.image" alt=""></li>
+      <li v-else class='any'><img :src="item.image" alt=""><span class="any">{{item.message}}</span></li>
     </ul>
     <Register v-if="registerPop" :ws="ws"></Register>
   </div>
@@ -58,9 +58,9 @@ export default {
             }
             break;
           case 'broadcast':
-            if (data.language == 'zh') {
+            if (data.language == 'en') {
               that.flag = true
-              that.list.push({message: data.message, image: data.image})
+              that.list.push({message: data.message, image: data.image, language: data.language})
             } else {
               that.flag = false
               that.translate(data)
@@ -85,8 +85,6 @@ export default {
         console.log('解析服务器发送的数据失败')
       }
     }
-
-    this.translate({message: 'dfdfdfdf'})
   },
   methods: {
     goRegist () {
@@ -115,8 +113,8 @@ export default {
         if (matches) {
           that.ws.json({
             protocal: 'p2p',
-            language: 'zh',
-            image: require('assets/111.jpg'),
+            language: 'en',
+            image: require('assets/222.jpg'),
             from: that.nickname,
             to: matches[1],
             message: matches[2]
@@ -124,9 +122,9 @@ export default {
         } else {
           that.ws.json({
             protocal: 'broadcast',
-            language: 'zh',
+            language: 'en',
             from: that.nickname,
-            image: require('assets/111.jpg'),
+            image: require('assets/222.jpg'),
             message: that.message
           })
         }
@@ -135,9 +133,8 @@ export default {
       }
     },
     translate (data) {
-      console.log(222)
-      console.log(data)
       let md = md5('20180817000195588' + data.message + '12345678QNtcbQLcMllDv2w8Fvbz')
+      let that = this
       ajax({
         url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
         method: 'jsonp',
@@ -145,13 +142,17 @@ export default {
         data: {
           q: data.message, //encodeURI(contents.trim()),
           from: data.language,
-          to: "zh",
+          to: "en",
           appid: 20180817000195588,
           salt: 12345678,
           sign: md
         },
         success (res) {
-          console.log(res, 'res')
+          var dstText = '';
+          for (var i = 0; i < res.trans_result.length; i++) {
+            dstText += res.trans_result[i].dst;
+          }
+          that.list.push({message: dstText, image: data.image, language: data.language})
         }
       })
     }

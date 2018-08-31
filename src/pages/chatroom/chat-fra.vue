@@ -8,8 +8,8 @@
       <button @click="sendMessage">发送</button>
     </div>
     <ul class="content">
-      <li v-if="flag" v-for="item in list" :class="{own:flag, any:!flag}"><span :class="{own:flag, any:!flag}">{{item.message}}</span><img :src="item.image" alt=""></li>
-      <li v-if="!flag" v-for="item in list" :class="{own:flag, any:!flag}"><img :src="item.image" alt=""><span :class="{own:flag, any:!flag}">{{item.message}}</span></li>
+      <li v-for="item in list" v-if="item.language =='fra' " class='own'><span class="own">{{item.message}}</span><img :src="item.image" alt=""></li>
+      <li v-else class='any'><img :src="item.image" alt=""><span class="any">{{item.message}}</span></li>
     </ul>
     <Register v-if="registerPop" :ws="ws"></Register>
   </div>
@@ -18,7 +18,8 @@
 <script>
 import Register from 'components/chatroom/register'
 import axios from 'axios'
-import md5 from 'libs/md5'
+import {md5} from '../../libs/md5'
+import ajax from '../../plugins/ajax'
 export default {
   name: 'chatroom',
   data () {
@@ -40,7 +41,7 @@ export default {
     this.ws.onmessage = function(evt) {
       try {
         let data = JSON.parse(evt.data)
-        console.log(data)
+//        console.log(data)
         switch (data.protocal){
           case 'register':
             switch(data.code){
@@ -57,9 +58,9 @@ export default {
             }
             break;
           case 'broadcast':
-            if (data.language == 'en') {
+            if (data.language == 'fra') {
               that.flag = true
-              that.list.push({message: data.message, image: data.image})
+              that.list.push({message: data.message, image: data.image, language: data.language})
             } else {
               that.flag = false
               that.translate(data)
@@ -112,8 +113,8 @@ export default {
         if (matches) {
           that.ws.json({
             protocal: 'p2p',
-            language: 'en',
-            image: require('assets/222.jpg'),
+            language: 'fra',
+            image: require('assets/333.jpg'),
             from: that.nickname,
             to: matches[1],
             message: matches[2]
@@ -121,9 +122,9 @@ export default {
         } else {
           that.ws.json({
             protocal: 'broadcast',
-            language: 'en',
+            language: 'fra',
             from: that.nickname,
-            image: require('assets/222.jpg'),
+            image: require('assets/333.jpg'),
             message: that.message
           })
         }
@@ -132,29 +133,28 @@ export default {
       }
     },
     translate (data) {
-      var md = md5('20180817000195588' + data.message + '12345678QNtcbQLcMllDv2w8Fvbz')
-      this.$request({
-        type: "get",
-        async: false, //must be synchronized
-        url: "http://api.fanyi.baidu.com/api/trans/vip/translate",
-        dataType: "jsonp",
+      let md = md5('20180817000195588' + data.message + '12345678QNtcbQLcMllDv2w8Fvbz')
+      let that = this
+      ajax({
+        url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
+        method: 'jsonp',
+        // dataType: 'json',
         data: {
           q: data.message, //encodeURI(contents.trim()),
           from: data.language,
-          to: "en",
+          to: "fra",
           appid: 20180817000195588,
           salt: 12345678,
           sign: md
         },
-      }).then((json) => {
-        console.log(json, 'res')
-//          this.list = json.list
-//          var dstText = '';
-//          for (var i = 0; i < json.trans_result.length; i++) {
-//            dstText += json.trans_result[i].dst;
-//          }
-//          $('#content').append("<li style='text-align:right;'><span class='else'>" + dstText + "</span><img src='" + data.image + "' alt=''></li>")
-    })
+        success (res) {
+          var dstText = '';
+          for (var i = 0; i < res.trans_result.length; i++) {
+            dstText += res.trans_result[i].dst;
+          }
+          that.list.push({message: dstText, image: data.image, language: data.language})
+        }
+      })
     }
   }
 }
