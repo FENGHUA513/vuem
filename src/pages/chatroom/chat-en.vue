@@ -8,8 +8,7 @@
       <button @click="sendMessage">发送</button>
     </div>
     <ul class="content">
-      <li v-for="item in list" v-if="item.language =='en' " class='own'><span class="own">{{item.message}}</span><img :src="item.image" alt=""></li>
-      <li v-else class='any'><img :src="item.image" alt=""><span class="any">{{item.message}}</span></li>
+      <li v-for="item in list" :class="[item.language == 'en' ? 'own':'any']"><img v-if="item.language!='en'" :src="item.image" alt=""><span :class="[item.language == 'en' ? 'own':'any']">{{item.message}}</span><img v-if="item.language=='en'" :src="item.image" alt=""></li>
     </ul>
     <Register v-if="registerPop" :ws="ws"></Register>
   </div>
@@ -28,8 +27,7 @@ export default {
       ws: '',
       message: '',
       nickname: '',
-      list: [],
-      flag: true
+      list: []
     }
   },
   components: {
@@ -59,10 +57,8 @@ export default {
             break;
           case 'broadcast':
             if (data.language == 'en') {
-              that.flag = true
               that.list.push({message: data.message, image: data.image, language: data.language})
             } else {
-              that.flag = false
               that.translate(data)
             }
             break;
