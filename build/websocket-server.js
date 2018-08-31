@@ -1,5 +1,4 @@
 var ws = require('nodejs-websocket');
-var fs = require('fs');
 var users = {}
 var server = ws.createServer(function(conn) {
     console.log('new conneciton');
@@ -32,17 +31,20 @@ var server = ws.createServer(function(conn) {
                 language: 'zh',
                 code: '1000',
                 nickname: username,
+                //image: data.image,
                 message: '恭喜注册成功'
             })
-            console.log('注册成功了')
             break
           case 'broadcast':
             // 做广播消息处理
-              conn.json({
-                  protocal: 'broadcast',
-                  language: data.language,
-                  message: data.message
+            for (var user in users) {
+              users[user].json({
+                protocal: 'broadcast',
+                language: data.language,
+                image: data.image,
+                message: data.from + '：' + data.message
               })
+            }
             break
           case 'p2p':
             // 做点对点消息处理
@@ -62,6 +64,7 @@ var server = ws.createServer(function(conn) {
               protocal: 'p2p',
               language: data.language,
               code: '2000',
+              image: data.image,
               message: data.from + '：' + data.message
             })
 

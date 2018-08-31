@@ -18,26 +18,23 @@ export default {
   },
   props: ['ws'],
   components: {
-    
-  },
-  beforeCreate () {
-    console.log('beforeCreate', global === window)
+
   },
   mounted () {
   },
   methods: {
     confirmBtn () {
       let jsonObj = {
-        nickname: this.nickname,
         protocal: 'register',
-        language: 'zh'
+        language: 'zh',
+        nickname: this.nickname
       }
       console.log(this.ws)
       if (this.ws && this.ws.readyState === 1) {
          let jsonStr = JSON.stringify(jsonObj)
          this.ws.send(jsonStr)
       } else {
-        this.$toast('与服务器链接中断') 
+        this.$toast('与服务器链接中断')
       }
     }
   }

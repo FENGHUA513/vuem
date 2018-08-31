@@ -1,15 +1,8 @@
 <template>
   <div class="wrap">
     <header>
-      <button @click="goRegist">请先注册</button><span>{{myName}}</span>
+      <button @click="goRegist">注册</button><span>{{myName}}</span>
     </header>
-    <ul class="members">
-      <li v-for="item in list"><span class="message">{{item.message}}</span><span class="nickname"> :{{item.nickname}}</span></li>
-    </ul>
-    <footer>
-      <input placeholder="请输入" type="" name="" v-model="message">
-      <button @click="sendMessage">发送</button>
-    </footer>
     <Register v-if="registerPop" :ws="ws"></Register>
   </div>
 </template>
@@ -20,7 +13,6 @@ export default {
   name: 'chatroom',
   data () {
     return {
-      list: [],
       registerPop: false,
       ws: '',
       message: '',
@@ -32,23 +24,30 @@ export default {
   },
   created () {
     let that = this
-    global.a = '111111'
     this.wsconnect() // 链接服务
-    this.ws.onmessage = function(res) {
-      let data = JSON.parse(res.data)
-      console.log(data, 'data')
-      if (data.protocal === 'broadcast') {
-        that.list.push({nickname: that.myName, message: that.message})
-      } else if (data.protocal === 'register') {
-        if (data.code === '1001') {
-          that.$toast('该用户已存在')
-        } else {
-          that.$toast('恭喜注册成功')
-          that.registerPop = false
-          that.myName = data.nickname
+    this.ws.onmessage = function(evt) {
+      try {
+        let data = JSON.parse(evt.data)
+        console.log(data)
+        switch (data.protocal){
+          case 'register':
+            switch(data.code){
+              case '1000':
+                that.myName = data.nickname
+                that.$toast('恭喜注册成功')
+                that.$router.push({name: 'ChatEn', params: {ws: that.ws, nickname: data.nickname}})
+                break
+              case '1001':
+                that.$toast('用户名被占用了')
+                break
+              default:
+                break
+            }
+          default:
+            break
         }
-      } else if (data.protocal === 'p2p') {
-        // 点对点的
+      } catch (e) {
+        console.log('解析服务器发送的数据失败')
       }
     }
   },
@@ -56,35 +55,14 @@ export default {
     goRegist () {
       this.registerPop = true
     },
-    registSuccess (res) {
-      this.list.push({nickname: res.nickname})
-      this.registerPop = false
-    },
     wsconnect () {
       this.ws = new WebSocket('ws://localhost:8081');
+      let that = this
       this.ws.onopen = function() {
         console.log('链接服务器成功')
       }
       this.ws.onerror = function() {
         that.$toast('链接服务器失败')
-      }
-    },
-    sendMessage () {
-      let that = this
-      let jsonObj = {
-        message: that.message,
-        protocal: 'broadcast',
-        language: 'zh'
-      }
-      that.ws.json = function(jsonObj) {
-        let jsonStr = JSON.stringify(jsonObj)
-        that.ws.send(jsonStr)
-      } 
-      console.log(this.ws)
-      if (that.ws && that.ws.readyState === 1) {
-         that.ws.json(jsonObj)
-      } else {
-        that.$toast('与服务器链接中断') 
       }
     }
   }
@@ -110,34 +88,18 @@ header {
     border-radius: 8px;
     width: 200px;
     padding: 10px;
+    cursor: pointer;
   }
   span {
     float: right;
     margin-right: 20px;
   }
 }
-.members {
-  margin-top: 10px;
-  li {
-    line-height: 60px;
-    padding: 0 20px;
-    // float: right;
-    p {
-      float: right;
-    }
-    .nickname {
-      color: green;
-    }
-    .message {
-      font-size: 30px;
-    }
-  }
-}
+
 footer {
   position: fixed;
   bottom: 50px;
   width: 100%;
-  // height: 100px;
   background-color: gray;
   padding: 30px 0;
   input {

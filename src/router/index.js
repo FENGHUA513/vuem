@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/pages/home'
 import Login from '@/pages/login'
-import ChatRoom from '@/pages/chatroom'
+import Chatzh from '@/pages/chatroom/chinese'
+import Chaten from '@/pages/chatroom/english'
 
 Vue.use(Router)
 
@@ -19,9 +20,14 @@ export default new Router({
       component: Login
     },
     {
-      path: '/chatroom',
-      name: 'ChatRoom',
-      component: ChatRoom
+      path: '/chatzh',
+      name: 'Chatzh',
+      component: Chatzh
+    },
+    {
+      path: '/chaten',
+      name: 'Chaten',
+      component: Chaten
     }
   ]
 })
