@@ -18,8 +18,8 @@
 <script>
 import Register from 'components/chatroom/register'
 import axios from 'axios'
-import md5 from 'libs/md5'
-import jsonp from 'jsonp'
+import {md5} from '../../libs/md5'
+import ajax from '../../plugins/ajax'
 export default {
   name: 'chatroom',
   data () {
@@ -85,6 +85,8 @@ export default {
         console.log('解析服务器发送的数据失败')
       }
     }
+
+    this.translate({message: 'dfdfdfdf'})
   },
   methods: {
     goRegist () {
@@ -136,43 +138,22 @@ export default {
       console.log(222)
       console.log(data)
       let md = md5('20180817000195588' + data.message + '12345678QNtcbQLcMllDv2w8Fvbz')
-      jsonp('http://api.fanyi.baidu.com/api/trans/vip/translate',{
-        q: data.message, //encodeURI(contents.trim()),
-        from: data.language,
-        to: "zh",
-        appid: 20180817000195588,
-        salt: 12345678,
-        sign: md
-      },(err,data) => {
-        if(err){
-          console.log(err.message)
-        }else{
-          console.log(3333333333333)
-          console.log(data)
+      ajax({
+        url: 'http://api.fanyi.baidu.com/api/trans/vip/translate',
+        method: 'jsonp',
+        // dataType: 'json',
+        data: {
+          q: data.message, //encodeURI(contents.trim()),
+          from: data.language,
+          to: "zh",
+          appid: 20180817000195588,
+          salt: 12345678,
+          sign: md
+        },
+        success (res) {
+          console.log(res, 'res')
         }
       })
-//      this.$request({
-//        type: "get",
-//        async: false, //must be synchronized
-//        url: "http://api.fanyi.baidu.com/api/trans/vip/translate",
-//        dataType: "jsonp",
-//        data: {
-//          q: data.message, //encodeURI(contents.trim()),
-//          from: data.language,
-//          to: "zh",
-//          appid: 20180817000195588,
-//          salt: 12345678,
-//          sign: md
-//        },
-//      }).then((json) => {
-//        console.log(json)
-//          this.list = json.list
-//          var dstText = '';
-//          for (var i = 0; i < json.trans_result.length; i++) {
-//            dstText += json.trans_result[i].dst;
-//          }
-//          $('#content').append("<li style='text-align:right;'><span class='else'>" + dstText + "</span><img src='" + data.image + "' alt=''></li>")
-//    })
     }
   }
 }

@@ -1,6 +1,6 @@
 import axios from 'axios'
 import qs from 'qs'
-import { md5 } from '../libs/encrypt_md5'
+import { md5 } from '../libs/md5'
 
 const config = {
   timeout: 6000,
