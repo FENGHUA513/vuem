@@ -89,6 +89,8 @@ export default {
     },
     wsconnect () {
       this.ws = new WebSocket('ws://localhost:8081');
+      this.$store.commit('saveWs', this.ws) // 将ws存入store
+      console.log(this.$store.state.chatroom.ws, 'this.$store.state.chatroom.ws')
       let that = this
       this.ws.onopen = function() {
         console.log('链接服务器成功')
